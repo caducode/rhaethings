@@ -67,7 +67,7 @@ def busca_produtos(qtd_rec=5,img_path=""):
             type_img = response.headers['content-type'].split('/')[1]
             img = Image.open(response.raw)
             filename = uuid.uuid4().hex
-            img.save(os.path.join("/home/cadu/Documents/projeto_arezzo/2023/rhae_api/rhae_api/assets/fotos",filename+"."+type_img))
+            img.save(os.path.join("/home/cadu/Documents/projeto_arezzo/2023/rhae_api/rhae_api/assets/fotos", filename+"."+ type_img))
     
     img_name, tensor = extract_one_img(os.path.join("/home/cadu/Documents/projeto_arezzo/2023/rhae_api/rhae_api/assets/fotos",filename+"."+type_img))
     item = tensor[0]
@@ -80,5 +80,5 @@ def busca_produtos(qtd_rec=5,img_path=""):
     ]
 
     results = sorted(results, key=lambda d: d["score"], reverse=True)
-    recommendations = [data['names'][result['index']] for i,result in enumerate(results)]
+    recommendations = [data['names'][result['index']] for i, result in enumerate(results)]
     return recommendations
