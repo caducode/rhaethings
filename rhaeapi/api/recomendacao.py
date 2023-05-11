@@ -8,15 +8,15 @@ from transformers import CLIPProcessor, CLIPModel
 import torch
 import requests
 import uuid
-#import cv2
 from deepface import DeepFace
-#from IPython import display
 from math import sqrt
 
 
 #definicoes de path
 emb_path = "/home/cadu/Documents/projeto_arezzo/2023/rhae_api/rhae_api/assets/embeddings_full.data"
-#imgs_base = "/home/cadu/Documents/projeto_arezzo/2023/demo_recomendacao/celebridades_imdb"
+celeb_path = "/home/cadu/Documents/projeto_arezzo/2023/rhaeapi_ok/rhaeapi/lista_celeb.data"
+imgs_base = "/home/cadu/Documents/projeto_arezzo/2023/demo_recomendacao/celebridades_imdb"
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb: 1024"
 #profile_base = "/home/cadu/Documents/projeto_arezzo/2023/demo_recomendacao/produtos_celebridades"
 #img_src_path =  "/home/cadu/Documents/projeto_arezzo/2023/demo_recomendacao/arezzo_full"
 
@@ -49,15 +49,22 @@ def extract_one_img(path_img):
 
 #busca cliente
 def busca_cliente(url_foto):
-    os.environ["CUDA_VISIBLE_DEVICES"] = ""
-    if(url_foto):
-        sym_faces_df = DeepFace.find(img_path = url_foto, db_path = imgs_base, enforce_detection=False) #enforce_detection=False
-        f, axarr = plt.subplots(2, 2, figsize=(10,10))
-        curr_row = 0
-        for index, row in enumerate(list(sym_faces_df[0].identity[0:4])):
-            print(index)
+    #os.environ["CUDA_VISIBLE_DEVICES"] = ""
+    with open(celeb_path, "rb") as f:
+        data = pickle.load(f)
 
-##busca_cliente("imagem_camera.png")
+
+    if(url_foto):
+        sym_faces_df = DeepFace.find(img_path = url_foto, db_path = imgs_base, model_name="Facenet", enforce_detection=False) #enforce_detection=False
+        curr_row = 0
+        result = list(sym_faces_df[0].identity[0:4])
+        user = os.path.basename(result[0])
+        
+        for i in data:
+            if(i['nome'].startswith(user)):
+                return i
+
+
 
 def busca_produtos(qtd_rec=5,img_path=""):
     qtd_rec  = int(qtd_rec)

@@ -13,3 +13,11 @@ def getSimilar(request):
     retorno = {'imagens_similares': recomend, 'url_processada': str(img)}
     
     return Response(retorno)
+
+@api_view(['GET'])
+def getCliente(request):
+    img = request.GET.get('img',0)
+    if(img):
+        user = recomendacao.busca_cliente(img)
+        return Response(user)
+    

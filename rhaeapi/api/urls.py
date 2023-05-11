@@ -4,4 +4,5 @@ from . import views
 # endpoints
 urlpatterns = [
     path('fotos/similar/', views.getSimilar),
+    path('usuario/', views.getCliente),
 ]
